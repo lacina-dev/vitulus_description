@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<robot name="Vitulus" xmlns:xacro="http://ros.org/wiki/xacro">
+<!--<xacro:include filename="$(find vitulus)/urdf/_d435.urdf.xacro"/>-->
+<!--<xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro"/>-->
+<!--  <xacro:arg name="use_nominal_extrinsics" default="true"/>-->
+    <xacro:arg name="use_nominal_extrinsics" default="false"/>
+  <xacro:arg name="add_plug" default="false" />
+  <xacro:arg name="use_mesh" default="true" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+    <xacro:include filename="$(find vitulus_description)/urdf/macros.xacro" />
+ <xacro:arg name="laser_visual" default="false"/>
+  <xacro:arg name="imu_visual"   default="false"/>
+
+<!-- /////////////////////////////////////////////////////////////////-->
+
+<!-- Include materials-->
+
+<material name="Black">
+   <color rgba="0.0 0.0 0.0 1.0"/>
+</material>
+
+<material name="dark">
+   <color rgba="0.1 0.1 0.1 1.0"/>
+</material>
+
+<material name="White">
+   <color rgba="1.0 1.0 1.0 1.0"/>
+</material>
+
+<!-- /////////////////////////////////////////////////////-->
+
+<!-- constants -->
+<xacro:property name="deg_to_rad" value="0.017453"/>
+<xacro:property name="PI" value="3.14"/>
+<xacro:property name="PosMod" value="${3.14/2}"/>
+
+<!--chassis property -->
+<xacro:property name="chassis_len" value=".19"/>
+<xacro:property name="chassis_width" value=".19"/>
+<xacro:property name="chassis_height" value="0.070"/>
+
+<!-- wheel property -->
+<xacro:property name="wheel_radius" value="0.055"/>
+<xacro:property name="wheel_width" value="0.022"/>
+<xacro:property name="wheel_height" value="0.11"/>
+<xacro:property name="wheel_mass" value=".2"/>
+
+
+<!-- /////////////////////////////////////////////////////-->
+<xacro:macro name="cylinder_inertia" params ="m r h">
+  <inertial>
+   <mass value="${m}"/>
+   <inertia ixx="${m*(3*r*r+h*h)/12}"  ixy="0.0" ixz="0.0"
+            iyy="${m*(3*r*r+h*h)/12}"  iyz= "0.0"
+            izz="${m*r*r/2}"/>
+   </inertial>
+</xacro:macro>
+
+<!-- ///////////////////////////////////////////////////-->
+
+<xacro:macro name= "inertial_matrix" params="mass">
+  <inertial>
+    <mass value="${mass}"/>
+      <inertia ixx="0.1" ixy="0"
+               iyy="0.1" iyz="0"
+               izz="0.1" ixz="0"/>
+   </inertial>
+ </xacro:macro>
+
+<!-- ////////////////////////////////////////////////////-->
+
+  <link name="base_link">
+
+    <visual>
+        <geometry>
+            <cylinder length="0.01" radius="0.01"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+
+
+
+  <joint name="chassisTobase_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="chassis"/>
+    <!--<origin rpy="0 0 1.57" xyz=".18 .095 .065"/>-->
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+ 
+  </joint>
+
+
+
+  <link name="chassis">
+    <visual>
+    <origin rpy="0 0 ${deg_to_rad*180}" xyz="0.0 0 0.0"/>
+      <geometry>
+        <mesh filename="package://vitulus_description/meshes/vitulus4wd/chassis.dae"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+          <mesh filename="package://vitulus_description/meshes/vitulus4wd/chassis.dae"/>
+      </geometry>
+    </collision>
+   <xacro:inertial_matrix mass="4.0"/>
+  </link>
+
+
+  <!-- //////////////////////////////////////////////////////////////// -->
+
+    <xacro:wheel lr="left" fr="front" tY="1" tX="1" rY="-1" nr="0"/>
+    <xacro:wheel lr="right" fr="front" tY="-1" tX="1" rY="0" nr="1"/>
+    <xacro:wheel lr="left" fr="rear" tY="1" tX="-1" rY="-1" nr="2"/>
+    <xacro:wheel lr="right" fr="rear" tY="-1" tX="-1" rY="0" nr="3"/>
+
+  <!-- Lidar -->
+ 
+
+  <link name="imu_link">
+    <visual>
+        <geometry>
+            <box size="0.01 0.01 0.01" />
+          </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+  <!--<gazebo reference="imu_link">
+    <sensor type="imu" name="imu">
+      <always_on>true</always_on>
+      <visualize>$(arg imu_visual)</visualize>
+    </sensor>
+  </gazebo>-->
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="imu_link"/>
+    <origin xyz="0.164 0.0025 0.297" rpy="0 ${deg_to_rad*180} ${deg_to_rad*270}"/>
+<!--    <origin xyz="0.164 0.0025 0.297" rpy="0 0 0"/>-->
+  </joint>
+
+
+     <link name="mag_link">
+    <visual>
+        <geometry>
+            <box size="0.015 0.01 0.01" />
+          </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="mag_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="mag_link"/>
+    <origin xyz="0.164 0.0025 0.297" rpy="0 ${deg_to_rad*180} ${deg_to_rad*90}"/>s
+  </joint>
+  
+  <link name="base_scan">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.03"/>
+      </geometry>
+      <material name="dark"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.04"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.114" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+               iyy="0.001" iyz="0.0"
+               izz="0.001" />
+    </inertial>
+  </link> 
+
+    <joint name="scan_joint" type="fixed">
+      <parent link="chassis"/>
+      <child link="base_scan"/>
+      <origin xyz="0.079 0 0.348" rpy="0 0 ${deg_to_rad*270}"/>
+    </joint>
+
+    <xacro:sensor_d435
+            parent="chassis"
+            name="d435"
+            use_nominal_extrinsics="$(arg use_nominal_extrinsics)"
+            add_plug="$(arg add_plug)"
+            use_mesh="$(arg use_mesh)">
+
+        <origin xyz="0.222 0 0.280" rpy="0 0 ${deg_to_rad*0}"/>
+    </xacro:sensor_d435>
+
+
+  <link name="t265_link">
+<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*90}" />-->
+<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}" />-->
+      <origin xyz="0.0 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}" />
+<!--    <visual>-->
+<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}" />-->
+<!--      <geometry>-->
+<!--        <mesh filename="package://vitulus_description/meshes/t265.dae" scale="0.001 0.001 0.001"/>-->
+<!--      </geometry>-->
+
+<!--    </visual>-->
+
+<!--    <collision>-->
+<!--      <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--      <geometry>-->
+<!--        <cylinder length="0.0315" radius="0.055"/>-->
+<!--      </geometry>-->
+<!--    </collision>-->
+
+
+  </link>
+
+ <joint name="t265_joint" type="fixed">
+      <parent link="chassis"/>
+      <child link="t265_link"/>
+<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}"/>-->
+<!--      <origin xyz="-0.258 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*90}"/>-->
+      <origin xyz="0.232 0 0.322" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}"/>
+<!--      <origin xyz="-0.0 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}"/>-->
+    </joint>
+
+
+</robot>

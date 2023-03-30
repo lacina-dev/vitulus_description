@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+  <xacro:macro name="cylinder_inertia" params="m r h">
+
+    <inertia
+          ixx="${m*(3*r*r+h*h)/12}"
+    			ixy = "0"
+    			ixz = "0"
+    			iyy="${m*(3*r*r+h*h)/12}"
+    			iyz = "0"
+    			izz="${m*r*r/2}"
+    />
+  </xacro:macro>
+
+  <xacro:property name="wheelWidth" value="0.046"/>
+	<xacro:property name="wheelRadius" value="0.105"/>
+	<xacro:property name="wheelMass" value="0.5"/>
+	<xacro:property name="wheelOffsetY" value="0.213"/>
+  <xacro:property name="wheelOffsetX" value="0.125"/>
+
+
+
+  <xacro:macro name="wheel" params="lr fr tY tX rY nr">
+
+    <link name="${fr}_${lr}_wheel">
+      <collision>
+        <origin xyz="0 0 0"
+        		rpy="${-tY*PI/2} 0 0" />
+        <geometry>
+          <cylinder
+            length="${wheelWidth}"
+            radius="${wheelRadius}"/>
+        </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0"
+        		rpy="0 0 ${rY*PI}" />
+        <geometry>
+          <mesh filename="package://vitulus_description/meshes/vitulus4wd/urdf_wheel.dae"/>
+<!--          <cylinder-->
+<!--            length="${wheelWidth}"-->
+<!--            radius="${wheelRadius}"/>-->
+        </geometry>
+      </visual>
+
+<!--      <inertial>-->
+<!--        <origin xyz="0 0 0"-->
+<!--        		rpy="${-tY*PI/2} 0 0" />-->
+<!--        <mass value="${wheelMass}"/>-->
+<!--        <xacro:cylinder_inertia-->
+<!--          m="${wheelMass}"-->
+<!--          r="${wheelRadius}"-->
+<!--          h="${wheelWidth}"/>-->
+<!--      </inertial>-->
+    </link>
+
+    <gazebo reference="${fr}_${lr}_wheel">
+      <mu1 value="1.0"/>
+      <mu2 value="1.0"/>
+      <kp  value="10000000.0" />
+
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>1.0</maxVel>
+
+
+      <!--kd  value="1.0" />
+      <fdir1 value="1 0 0"/-->
+      <material>Gazebo/FlatBlack</material>
+    </gazebo>
+
+
+    <joint name="wheel_${nr}_joint" type="continuous">
+      <parent link="chassis"/>
+      <child link="${fr}_${lr}_wheel"/>
+      <origin
+        xyz = "${-tX*(wheelOffsetX)} ${-tY*(wheelOffsetY+(wheelWidth/2))} ${wheelRadius}"
+
+        rpy = "0 0 0" />
+      <axis xyz="0 1 0"
+      		  rpy="0 0 0" />
+      <!--limit effort="100" velocity="10"/-->
+      <limit effort="0.0" velocity="0.0"/>
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
+
+<!--
+  http://gazebosim.org/tutorials/?tut=ros_control
+-->
+
+    <transmission name="${fr}_${lr}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="$wheel_${nr}_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+<!--        <hardwareInterface>EffortJointInterface</hardwareInterface>-->
+      </joint>
+      <actuator name="${fr}_${lr}Motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+<!--        <hardwareInterface>EffortJointInterface</hardwareInterface>-->
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  </xacro:macro>
+
+</robot>

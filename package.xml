@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>vitulus_description</name>
+  <version>0.0.1</version>
+  <description>The Vitulus URDF</description>
+
+  <maintainer email="robert@lacina.dev">Robert Lacina</maintainer>
+  <license>MIT</license>
+  <author email="robert@lacina.dev">Robert Lacina</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+</package>
