@@ -4,8 +4,9 @@
 
 ### NODES
   /
+  
     joint_state_publisher (joint_state_publisher/joint_state_publisher)
-    
+
     robot_state_publisher (robot_state_publisher/robot_state_publisher)
 
 
