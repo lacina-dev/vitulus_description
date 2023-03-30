@@ -12,7 +12,7 @@
 
 `cd ~/catkin_ws/src/vitulus`
 
-`git clone https://github.com/lacina-dev/vitulus_teleop.git`
+`git clone https://github.com/lacina-dev/vitulus_description.git`
 
 `cd ~/catkin_ws`
 
@@ -21,6 +21,8 @@
 ## Run
 
 `roslaunch vitulus_description vitulus4wd.launch rviz:=true joint_state_publisher:=true`
+
+
 ![rviz img](rviz.png)
 
 ## Info
