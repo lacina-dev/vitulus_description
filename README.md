@@ -1,10 +1,11 @@
-# vitulus_description
+# Vitulus description
  URDF description of VITULUS. Package publish robot state, joints, tf. 
 
 
 ### NODES
   /
     joint_state_publisher (joint_state_publisher/joint_state_publisher)
+    
     robot_state_publisher (robot_state_publisher/robot_state_publisher)
 
 
