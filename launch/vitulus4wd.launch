@@ -1,14 +1,17 @@
 <launch>
 
   <arg name="rviz" default="false"/>
+  <arg name="joint_state_publisher" default="false"/>
 
   <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find vitulus_description)/urdf/vitulus4WD_description.urdf.xacro'  use_nominal_extrinsics:=false" />
   <param name="robot_description" command="$(arg urdf_file)" />
 
-<!--   <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">-->
-<!--     <param name="use_gui" value="true"/>-->
-<!--     <param name="rate" value="50"/>-->
-<!--  </node>-->
+  <group if="$(arg joint_state_publisher)">
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+      <param name="use_gui" value="true"/>
+      <param name="rate" value="50"/>
+    </node>
+  </group>
 
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
     <param name="publish_frequency" type="double" value="50.0" />
