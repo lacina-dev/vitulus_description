@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
 <robot name="Vitulus" xmlns:xacro="http://ros.org/wiki/xacro">
-<!--<xacro:include filename="$(find vitulus)/urdf/_d435.urdf.xacro"/>-->
-<!--<xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro"/>-->
-<!--  <xacro:arg name="use_nominal_extrinsics" default="true"/>-->
+
     <xacro:arg name="use_nominal_extrinsics" default="false"/>
-  <xacro:arg name="add_plug" default="false" />
-  <xacro:arg name="use_mesh" default="true" />
-  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+    <xacro:arg name="add_plug" default="false" />
+    <xacro:arg name="use_mesh" default="true" />
+    <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
     <xacro:include filename="$(find vitulus_description)/urdf/macros.xacro" />
- <xacro:arg name="laser_visual" default="false"/>
-  <xacro:arg name="imu_visual"   default="false"/>
+    <xacro:arg name="laser_visual" default="false"/>
+    <xacro:arg name="imu_visual"   default="false"/>
 
 <!-- /////////////////////////////////////////////////////////////////-->
 
@@ -108,12 +106,14 @@
   </link>
 
 
-  <!-- //////////////////////////////////////////////////////////////// -->
+  <!-- Wheels -->
 
-    <xacro:wheel lr="left" fr="front" tY="1" tX="1" rY="-1" nr="0"/>
-    <xacro:wheel lr="right" fr="front" tY="-1" tX="1" rY="0" nr="1"/>
-    <xacro:wheel lr="left" fr="rear" tY="1" tX="-1" rY="-1" nr="2"/>
-    <xacro:wheel lr="right" fr="rear" tY="-1" tX="-1" rY="0" nr="3"/>
+
+    <xacro:wheel lr="right" fr="rear" tY="1" tX="1" rY="-1" nr="3"/>
+    <xacro:wheel lr="left" fr="rear" tY="-1" tX="1" rY="0" nr="2"/>
+    <xacro:wheel lr="right" fr="front" tY="1" tX="-1" rY="-1" nr="1"/>
+    <xacro:wheel lr="left" fr="front" tY="-1" tX="-1" rY="0" nr="0"/>
+
 
   <!-- Lidar -->
  
@@ -126,17 +126,28 @@
         <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
   </link>
-  <!--<gazebo reference="imu_link">
-    <sensor type="imu" name="imu">
-      <always_on>true</always_on>
-      <visualize>$(arg imu_visual)</visualize>
-    </sensor>
-  </gazebo>-->
 
   <joint name="imu_joint" type="fixed">
     <parent link="chassis"/>
     <child link="imu_link"/>
     <origin xyz="0.164 0.0025 0.297" rpy="0 ${deg_to_rad*180} ${deg_to_rad*270}"/>
+<!--    <origin xyz="0.164 0.0025 0.297" rpy="0 0 0"/>-->
+  </joint>
+
+
+    <link name="bno_imu_link">
+    <visual>
+        <geometry>
+            <box size="0.01 0.01 0.01" />
+          </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="bno_imu_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="bno_imu_link"/>
+    <origin xyz="-0.03 0.00 0.3" rpy="0 0 0"/>
 <!--    <origin xyz="0.164 0.0025 0.297" rpy="0 0 0"/>-->
   </joint>
 
@@ -199,35 +210,13 @@
 
 
   <link name="t265_link">
-<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*90}" />-->
-<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}" />-->
       <origin xyz="0.0 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}" />
-<!--    <visual>-->
-<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}" />-->
-<!--      <geometry>-->
-<!--        <mesh filename="package://vitulus_description/meshes/t265.dae" scale="0.001 0.001 0.001"/>-->
-<!--      </geometry>-->
-
-<!--    </visual>-->
-
-<!--    <collision>-->
-<!--      <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--      <geometry>-->
-<!--        <cylinder length="0.0315" radius="0.055"/>-->
-<!--      </geometry>-->
-<!--    </collision>-->
-
-
   </link>
 
  <joint name="t265_joint" type="fixed">
       <parent link="chassis"/>
       <child link="t265_link"/>
-<!--      <origin xyz="-0.108 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}"/>-->
-<!--      <origin xyz="-0.258 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*90}"/>-->
       <origin xyz="0.232 0 0.322" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}"/>
-<!--      <origin xyz="-0.0 0 0.185" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}"/>-->
     </joint>
-
 
 </robot>

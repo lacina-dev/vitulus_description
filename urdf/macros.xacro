@@ -2,11 +2,9 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-
   <xacro:property name="PI" value="3.1415926535897931"/>
 
   <xacro:macro name="cylinder_inertia" params="m r h">
-
     <inertia
           ixx="${m*(3*r*r+h*h)/12}"
     			ixy = "0"
@@ -18,12 +16,10 @@
   </xacro:macro>
 
   <xacro:property name="wheelWidth" value="0.046"/>
-	<xacro:property name="wheelRadius" value="0.105"/>
-	<xacro:property name="wheelMass" value="0.5"/>
-	<xacro:property name="wheelOffsetY" value="0.213"/>
+  <xacro:property name="wheelRadius" value="0.105"/>
+  <xacro:property name="wheelMass" value="0.5"/>
+  <xacro:property name="wheelOffsetY" value="0.213"/>
   <xacro:property name="wheelOffsetX" value="0.125"/>
-
-
 
   <xacro:macro name="wheel" params="lr fr tY tX rY nr">
 
@@ -70,8 +66,6 @@
       <maxVel>1.0</maxVel>
 
 
-      <!--kd  value="1.0" />
-      <fdir1 value="1 0 0"/-->
       <material>Gazebo/FlatBlack</material>
     </gazebo>
 
