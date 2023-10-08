@@ -205,7 +205,8 @@
             add_plug="$(arg add_plug)"
             use_mesh="$(arg use_mesh)">
 
-        <origin xyz="0.222 0 0.280" rpy="0 0 ${deg_to_rad*0}"/>
+<!--        <origin xyz="0.222 0 0.280" rpy="0 0 ${deg_to_rad*0}"/>-->
+        <origin xyz="0.202 0.024 0.280" rpy="0 0 ${deg_to_rad*0}"/>
     </xacro:sensor_d435>
 
 
@@ -218,5 +219,39 @@
       <child link="t265_link"/>
       <origin xyz="0.232 0 0.322" rpy="${deg_to_rad*90} 0 ${deg_to_rad*270}"/>
     </joint>
+
+    <!-- GNSS UBLOX -->
+
+   <link name="gnss_heading">
+    <visual>
+        <geometry>
+            <box size="0.01 0.01 0.01" />
+          </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="gnss_heading_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="gnss"/>
+    <origin xyz="-0.16 -0.21 0.3" rpy="0 0 -1.5707963"/>
+  </joint>
+
+  <link name="gnss">
+    <visual>
+        <geometry>
+            <box size="0.01 0.01 0.01" />
+          </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="gnss_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="gnsslite"/>
+    <!-- origin xyz="-0.16 0.21 0.3" rpy="0 0 -1.5707963"/ -->
+    <origin xyz="-0.16 0.21 0.3" rpy="0 0 -1.5707963"/>
+  </joint>
+
 
 </robot>
