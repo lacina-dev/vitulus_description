@@ -233,7 +233,7 @@
 
   <joint name="gnss_heading_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="gnss"/>
+    <child link="gnss_heading"/>
     <origin xyz="-0.16 -0.21 0.3" rpy="0 0 -1.5707963"/>
   </joint>
 
@@ -248,7 +248,7 @@
 
   <joint name="gnss_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="gnsslite"/>
+    <child link="gnss"/>
     <!-- origin xyz="-0.16 0.21 0.3" rpy="0 0 -1.5707963"/ -->
     <origin xyz="-0.16 0.21 0.3" rpy="0 0 -1.5707963"/>
   </joint>
