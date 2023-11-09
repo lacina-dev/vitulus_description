@@ -134,8 +134,24 @@
 <!--    <origin xyz="0.164 0.0025 0.297" rpy="0 0 0"/>-->
   </joint>
 
+<link name="bno_imu_link">
+    <visual>
+        <geometry>
+            <box size="0.01 0.01 0.01" />
+          </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
 
-    <link name="bno_imu_link">
+  <joint name="bno_imu_joint" type="fixed">
+    <parent link="chassis"/>
+    <child link="bno_imu_link"/>
+    <origin xyz="-0.20 -0.02 0.3" rpy="0 0 0"/>
+  </joint>
+
+
+
+<!--    <link name="bno_imu_link">
     <visual>
         <geometry>
             <box size="0.01 0.01 0.01" />
@@ -148,8 +164,7 @@
     <parent link="chassis"/>
     <child link="bno_imu_link"/>
     <origin xyz="-0.03 0.00 0.3" rpy="0 0 0"/>
-<!--    <origin xyz="0.164 0.0025 0.297" rpy="0 0 0"/>-->
-  </joint>
+  </joint>-->
 
 
      <link name="mag_link">
