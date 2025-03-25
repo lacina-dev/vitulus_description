@@ -4,7 +4,7 @@
     <xacro:arg name="use_nominal_extrinsics" default="false"/>
     <xacro:arg name="add_plug" default="false" />
     <xacro:arg name="use_mesh" default="true" />
-    <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+    <xacro:include filename="$(find vitulus_description)/urdf/_d435.urdf.xacro" />
     <xacro:include filename="$(find vitulus_description)/urdf/macros.xacro" />
     <xacro:arg name="laser_visual" default="false"/>
     <xacro:arg name="imu_visual"   default="false"/>
@@ -210,7 +210,7 @@
     <joint name="scan_joint" type="fixed">
       <parent link="chassis"/>
       <child link="base_scan"/>
-      <origin xyz="0.079 0 0.348" rpy="0 0 ${deg_to_rad*270}"/>
+      <origin xyz="0.062 0 0.348" rpy="0 0 ${deg_to_rad*270}"/>
     </joint>
 
     <xacro:sensor_d435
