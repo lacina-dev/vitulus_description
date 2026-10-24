@@ -13,7 +13,7 @@
     </node>
   </group>
 
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="log">
     <param name="publish_frequency" type="double" value="50.0" />
 <!--    <param name="robot_description"-->
 <!--         command="$(find xacro)/xacro &#45;&#45;inorder $(arg urdf_file)" />-->
